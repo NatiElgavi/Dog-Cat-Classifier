@@ -82,14 +82,41 @@ def process_video(video_path: str):
             f.write(f'{msg}\n')
             print(msg)
 
+    test_all_results(results)
     print('All done')
 
-def process_image(image_path: str):
+def test_all_results(results):
+    acc_cats = test_class_results(results, 'Data/Train_Data/cat', 'cat', 99, 0)
+    acc_dogs = test_class_results(results, 'Data/Train_Data/dog', 'dog', 99, 100)
+
+    print(f'Accuracy of video/images predictions of Cats: {acc_cats}')
+    print(f'Accuracy of video/images predictions of Dogs: {acc_dogs}')
+
+def test_class_results(results, source: str, img_prefix:str, count: int, match_offset: int) -> float:
+    matches = 0
+    for index in range(count):
+        img_name = f'{img_prefix}.{index}.jpg'
+        result = process_image(os.path.join(source, img_name), False)
+
+        # compare the prediction class we got from the image file to the video frame prediction result
+        if results[match_offset + index] == result:
+            matches += 1
+
+        if index == count:
+            break
+
+    return matches / count
+
+def process_image(image_path: str, print_result:bool):
     img = get_img(image_path)
     X = np.zeros((1, 64, 64, 3), dtype='float64')
     X[0] = img
     result = predict_image(model, X)
-    print('It is a ' + result + ' !')
+    
+    if print_result:
+        print('It is a ' + result + ' !')
+    
+    return result
 
 
 if __name__ == '__main__':
@@ -99,4 +126,4 @@ if __name__ == '__main__':
     if target.endswith('.mp4'):
         process_video(target)
     else:
-        process_image(target)
+        process_image(target, True)
