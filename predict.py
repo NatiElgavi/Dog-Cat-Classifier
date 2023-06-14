@@ -3,7 +3,7 @@
 from keras.models import Sequential
 from keras.models import model_from_json
 from time import sleep
-
+import cv2
 
 def predict(model, X):
     Y = model.predict(X)
@@ -13,14 +13,25 @@ def predict(model, X):
     for m in range(0, len(Y)):
         if Y[m] == 0:
             Z[m] = 'cat'
+
         else:
             Z[m] = 'dog'
+
         print('It is a ' + Z[m] + ' !')
+        output_path = 'C:\\Users\\TomerGilboa\\PycharmProjects\\Python\\Dog-Cat-Classifier' \
+                     '\\output\\' + Z[m] + 's\\' + str(m) + ".jpg"
+        files_path = 'C:\\Users\\TomerGilboa\\PycharmProjects\\Python\\Dog-Cat-Classifier' \
+                     '\\Data\\Videos\\test_frames\\' + str(m) + ".jpg"
+        img = get_img(files_path)
+        print(files_path)
+        print(output_path)
+        cv2.imwrite(output_path, img)
+        # sleep(30)
     return Z
 
 
 def video_capture(file_name):
-    import cv2
+
 
     cap = cv2.VideoCapture(file_name)
     if not cap.isOpened():
@@ -30,7 +41,6 @@ def video_capture(file_name):
     image_index = 0
     file_name_list: list = []
     while (cap.isOpened()):
-        # print(f"frame {image_index}")
         ret, frame = cap.read()
 
         if ret == True :
