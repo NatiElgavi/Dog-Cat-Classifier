@@ -26,7 +26,7 @@ def predict(model, X):
         print(files_path)
         print(output_path)
         cv2.imwrite(output_path, img)
-        # sleep(30)
+        sleep(1)
     return Z
 
 
