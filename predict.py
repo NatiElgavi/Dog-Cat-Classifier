@@ -2,21 +2,20 @@
 
 from keras.models import Sequential
 from keras.models import model_from_json
+from time import sleep
 
 
 def predict(model, X):
     Y = model.predict(X)
     Y = np.argmax(Y, axis=1)
     Z = [str(i) for i in Y]
-    print(Y)
+    # print(Y)
     for m in range(0, len(Y)):
         if Y[m] == 0:
             Z[m] = 'cat'
         else:
             Z[m] = 'dog'
         print('It is a ' + Z[m] + ' !')
-
-
     return Z
 
 
@@ -31,12 +30,15 @@ def video_capture(file_name):
     image_index = 0
     file_name_list: list = []
     while (cap.isOpened()):
-        print(f"frame {image_index}")
+        # print(f"frame {image_index}")
         ret, frame = cap.read()
+
         if ret == True :
             # path_text = r'\Data\Videos\test_frames\'
             path_text = ""
             path_text += str(image_index) + ".jpg"
+
+            # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
             cv2.imwrite(path_text, frame)
             file_name_list.append(path_text)
@@ -49,6 +51,7 @@ def video_capture(file_name):
             break
 
     cap.release()
+    cv2.destroyAllWindows()
     return file_name_list, image_index
 
 
