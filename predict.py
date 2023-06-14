@@ -34,14 +34,16 @@ def video_capture(file_name):
         ret, frame = cap.read()
 
         if ret == True :
-            # path_text = r'\Data\Videos\test_frames\'
-            path_text = ""
-            path_text += str(image_index) + ".jpg"
+            frames_path = 'C:\\Users\\TomerGilboa\\PycharmProjects\\Python\\Dog-Cat-Classifier' \
+                          '\\Data\Videos\\test_frames\\' + str(image_index) + ".jpg"
+            # print(frames_path )
+            # path_text = ""
+            # path_text += str(image_index) + ".jpg"
 
             # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-            cv2.imwrite(path_text, frame)
-            file_name_list.append(path_text)
+            cv2.imwrite(frames_path, frame)
+            file_name_list.append(frames_path)
 
             image_index += 1
         else:
@@ -60,19 +62,18 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         img_dir = sys.argv[1]
     else:
-        img_dir = r"C:\Users\TomerGilboa\PycharmProjects\Python\Dog-Cat-Classifier\data\Videos" \
-              r"\cats_and_dogs.mp4"
+        img_dir = "C:\\Users\\TomerGilboa\\PycharmProjects\\Python\\Dog-Cat-Classifier\\data" \
+                  "\\Videos\\cats_and_dogs.mp4"
 
     from get_dataset import get_img
     import numpy as np
 
     if ".mp4" in img_dir:  # checking if the file is video
         img_dir_list, total_imgs = video_capture(img_dir)
-        print(img_dir_list)
-        # img = get_img(img_dir_list[0])
         X = np.zeros((total_imgs, 64, 64, 3), dtype='float64')
         for i in range(0, total_imgs):
-            X[i] = get_img(img_dir_list[i])
+            file_name = img_dir_list[i]
+            X[i] = get_img(file_name)
 
     else:
         img = get_img(img_dir)
