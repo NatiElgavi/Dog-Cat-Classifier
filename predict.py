@@ -54,9 +54,10 @@ def video_capture(file_name):
 
 if __name__ == '__main__':
     import sys
-
-    # img_dir = sys.argv[1]
-    img_dir = r"C:\Users\TomerGilboa\PycharmProjects\Python\Dog-Cat-Classifier\data\Videos" \
+    if len(sys.argv) > 1:
+        img_dir = sys.argv[1]
+    else:
+        img_dir = r"C:\Users\TomerGilboa\PycharmProjects\Python\Dog-Cat-Classifier\data\Videos" \
               r"\cats_and_dogs.mp4"
 
     from get_dataset import get_img
