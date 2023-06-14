@@ -7,22 +7,14 @@ from time import sleep
 import cv2
 
 
-async def save_file(path, img_file):
-    cv2.imwrite(path, img_file)
-    sleep(1)
-
-
-def predict(model, X):
-    Y = model.predict(X)
-    Y = np.argmax(Y, axis=1)
-    Z = [str(i) for i in Y]
-    # print(Y)
+async def save_file():
+    Z=[]
     for m in range(0, len(Y)):
         if Y[m] == 0:
-            Z[m] = 'cat'
+            Z.append('cat')
 
         else:
-            Z[m] = 'dog'
+            Z.append('dog')
 
         print('It is a ' + Z[m] + ' !')
         output_path = 'C:\\Users\\TomerGilboa\\PycharmProjects\\Python\\Dog-Cat-Classifier' \
@@ -31,11 +23,20 @@ def predict(model, X):
                      '\\Data\\Videos\\test_frames\\' + str(m) + ".jpg"
         img = get_img(files_path)
 
-        # cv2.imwrite(output_path, img)
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(save_file(output_path, img))
-        # sleep(1)
-    return Z
+    cv2.imwrite(output_path, img)
+    sleep(30)
+
+
+def predict(model, X):
+    global Y
+    Y = model.predict(X)
+    Y = np.argmax(Y, axis=1)
+
+
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(save_file())
+
+    return
 
 
 def video_capture(file_name):
@@ -104,5 +105,5 @@ if __name__ == '__main__':
     model = model_from_json(model)
     # Getting weights
     model.load_weights("Data/Model/weights.h5")
-    Y = predict(model, X)
+    predict(model, X)
     # print('It is a ' + Y + ' !')
