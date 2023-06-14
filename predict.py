@@ -1,9 +1,16 @@
 # Arda Mavi
+import asyncio
 
 from keras.models import Sequential
 from keras.models import model_from_json
 from time import sleep
 import cv2
+
+
+async def save_file(path, img_file):
+    cv2.imwrite(path, img_file)
+    sleep(1)
+
 
 def predict(model, X):
     Y = model.predict(X)
@@ -19,20 +26,19 @@ def predict(model, X):
 
         print('It is a ' + Z[m] + ' !')
         output_path = 'C:\\Users\\TomerGilboa\\PycharmProjects\\Python\\Dog-Cat-Classifier' \
-                     '\\output\\' + Z[m] + 's\\' + str(m) + ".jpg"
+                      '\\output\\' + Z[m] + 's\\' + str(m) + ".jpg"
         files_path = 'C:\\Users\\TomerGilboa\\PycharmProjects\\Python\\Dog-Cat-Classifier' \
                      '\\Data\\Videos\\test_frames\\' + str(m) + ".jpg"
         img = get_img(files_path)
-        print(files_path)
-        print(output_path)
-        cv2.imwrite(output_path, img)
-        sleep(1)
+
+        # cv2.imwrite(output_path, img)
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(save_file(output_path, img))
+        # sleep(1)
     return Z
 
 
 def video_capture(file_name):
-
-
     cap = cv2.VideoCapture(file_name)
     if not cap.isOpened():
         print("failed to open file")
@@ -43,7 +49,7 @@ def video_capture(file_name):
     while (cap.isOpened()):
         ret, frame = cap.read()
 
-        if ret == True :
+        if ret == True:
             frames_path = 'C:\\Users\\TomerGilboa\\PycharmProjects\\Python\\Dog-Cat-Classifier' \
                           '\\Data\Videos\\test_frames\\' + str(image_index) + ".jpg"
             # print(frames_path )
@@ -69,6 +75,7 @@ def video_capture(file_name):
 
 if __name__ == '__main__':
     import sys
+
     if len(sys.argv) > 1:
         img_dir = sys.argv[1]
     else:
@@ -89,8 +96,6 @@ if __name__ == '__main__':
         img = get_img(img_dir)
         X = np.zeros((1, 64, 64, 3), dtype='float64')
         X[0] = img
-
-
 
     # Getting model:
     model_file = open('Data/Model/model.json', 'r')
