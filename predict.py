@@ -31,18 +31,39 @@ def predictVideo(model):
         return
     count = 0
     moreFrames = True
+    # >>> Missing part to be completed: run async task before starting to save the images
+    # >>> run async asyncUpload()
     while(moreFrames):
         moreFrames, frame = cap.read()
         if moreFrames:
+            # perform predict for the frame:
             X = np.zeros((1, 64, 64, 3), dtype='float64')
             X[0] = cv2.resize(frame, (64,64))
             Y = predict(model, X)
             print('Frame ' + str(count) + ' is a ' + Y + ' !')
+            # saving the images to disk:
+            dir = "./output/" + Y + "s"
+            fileName = dir + "/frame" + str(count) + ".jpg"
+            import time
+            time.sleep(10)
+            print("Saving file " + fileName)
+            cv2.imwrite(fileName, frame)
             count += 1
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
     cap.release()
     cv2.destroyAllWindows()
+    # >>> Miassing part to be completed: run async task before starting to save the images
+    # >>> run async asyncUpload()
+
+# Uploading the images created in folder output/cats and output/dogs:
+def asyncUpload(folder1, folder2):
+    # >>> to be completed:
+    # >>> while (continue):
+    # >>>   sleep(1)
+    # >>>   check for new files in the two folders
+    # >>>   upload the files
+    # >>>   need a mechanism to identify all is uploaded
 
 if __name__ == '__main__':
     # Getting model:
